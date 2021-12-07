@@ -1,0 +1,13 @@
+import os
+from multiforks import loader
+
+from multiprocessing import freeze_support
+
+if __name__ == "__main__":
+    fork_name = os.environ["CHIA_FORK"]
+    print(f"patched launcher {__file__} fork ", fork_name)
+    loader.get_fork_package(fork_name)
+    freeze_support()
+    from chia.server.start_full_node import main
+
+    main()
