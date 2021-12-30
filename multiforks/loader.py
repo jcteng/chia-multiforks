@@ -83,12 +83,23 @@ def get_mozilla_ca_crt() -> str:
 def launch_start_daemon(root_path: Path) -> subprocess.Popen:
     os.environ["CHIA_ROOT"] = str(root_path)
     # TODO: use startupinfo=subprocess.DETACHED_PROCESS on windows
+
+
     chia = sys.argv[0]
     print("chia args", chia)
     if chia.endswith(".py"):
-        chia = sys.executable + " -m multiforks.launchers.forkcli"
+        chia = sys.executable  + " -m multiforks.launchers.forkcli run_daemon"
     print("chia patched", chia)
-    process = subprocess.Popen(f"{chia} run_daemon --wait-for-unlock".split(), shell=True, stdout=subprocess.PIPE)
+
+    if 'nt' == os.name:
+        startupinfo = subprocess.STARTUPINFO()
+        # startupinfo.dwFlags |= subprocess.DETACHED_PROCESS    
+        # startupinfo.dwFlags |= subprocess.CREATE_NEW_PROCESS_GROUP   
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW           
+        startupinfo.wShowWindow = subprocess.SW_HIDE    
+        process = subprocess.Popen(f"{chia} --wait-for-unlock".split(),encoding="utf-8", shell=True,startupinfo=startupinfo,stdout=subprocess.PIPE)
+        return process
+    process = subprocess.Popen(f"{chia} --wait-for-unlock".split(),encoding="utf-8", shell=True, stdout=subprocess.PIPE)
     return process
 
 
@@ -164,7 +175,7 @@ def get_fork_package(fork_name):
 
     print("apply fork patch:" + fork_name)
     try:
-        package_root_name = "multiforks" + "." + fork_name + "."
+        package_root_name = "multiforks.forks."  + fork_name + "."
 
         print('0. monkey patch default_config')
         util_config.initial_config_file = initial_config_file
