@@ -2,16 +2,17 @@ from multiforks import loader
 from os import environ
 import sys
 import inquirer
-fork_list = [
-    'chia-mainnet',
-    'chia-testnet7',
-    'ext9',
-    'flax-mainnet',
-    'chiarose',
-]
 
+
+from multiforks import forks 
+from pkgutil import iter_modules
+
+
+
+fork_list = list(map(lambda x:x.name, iter_modules(forks.__path__)))
 def get_fork_name():
     fork_name = environ.get("CHIA_FORK")
+    
     if fork_name is None:
         fork_name = inquirer.prompt([inquirer.List('fork',
                 message="select fork to run?",
