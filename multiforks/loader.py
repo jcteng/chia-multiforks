@@ -17,7 +17,7 @@ from typing import Any, Union, Tuple
 from chia.daemon import server as daemon_server
 from chia.ssl import create_ssl
 from chia.util.path import mkdir
-
+import logging
 
 def patch_default_seeder_config(root_path: Path, filename="config.yaml") -> None:
     fork_name = os.environ.get("CHIA_FORK")
@@ -89,7 +89,7 @@ def launch_start_daemon(root_path: Path) -> subprocess.Popen:
     print("chia args", chia)
     if chia.endswith(".py"):
         chia = sys.executable  + " -m multiforks.launchers.forkcli run_daemon"
-    print("chia patched", chia)
+    # print("chia patched", chia)
 
     if 'nt' == os.name:
         startupinfo = subprocess.STARTUPINFO()
@@ -97,9 +97,10 @@ def launch_start_daemon(root_path: Path) -> subprocess.Popen:
         # startupinfo.dwFlags |= subprocess.CREATE_NEW_PROCESS_GROUP   
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW           
         startupinfo.wShowWindow = subprocess.SW_HIDE    
-        process = subprocess.Popen(f"{chia} --wait-for-unlock".split(),encoding="utf-8", shell=True,startupinfo=startupinfo,stdout=subprocess.PIPE)
+        creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
+        process = subprocess.Popen(f"{chia} --wait-for-unlock".split(),encoding="utf-8", startupinfo=startupinfo,stdout=subprocess.PIPE,creationflags=creationflags)
         return process
-    process = subprocess.Popen(f"{chia} --wait-for-unlock".split(),encoding="utf-8", shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(f"{chia} --wait-for-unlock".split(),encoding="utf-8", stdout=subprocess.PIPE)
     return process
 
 
@@ -153,9 +154,9 @@ def launch_service(root_path: Path, service_command) -> Tuple[subprocess.Popen, 
     else:
         creationflags = 0
     environ_copy = os.environ.copy()
-
+    print("start service->",service_array)
     process = subprocess.Popen(
-        service_array, shell=False, startupinfo=startupinfo, creationflags=creationflags, env=environ_copy
+        service_array, shell=False,encoding="utf-8",startupinfo=startupinfo, creationflags=creationflags, env=environ_copy
     )
     pid_path = daemon_server.pid_path_for_service(root_path, service_command)
     try:
@@ -175,8 +176,13 @@ def get_fork_package(fork_name):
 
     print("apply fork patch:" + fork_name)
     try:
-        package_root_name = "multiforks.forks."  + fork_name + "."
+        package_root_name = "multiforks.forks" + "." + fork_name + "."
+        # orginal_get_logger = logging.getLogger
 
+        # def get_patched_logger(name=""):
+        #     return orginal_get_logger(f"[{os.environ['CHIA_FORK']}]{name}")
+
+        # logging.getLogger = get_patched_logger
         print('0. monkey patch default_config')
         util_config.initial_config_file = initial_config_file
         try:
