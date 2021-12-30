@@ -37,7 +37,7 @@ def patch_default_seeder_config(root_path: Path, filename="config.yaml") -> None
     config = load_config(root_path, "config.yaml")
     # The following ignores root_path when the second param is absolute, which this will be
     seeder_config = load_config(root_path,
-                                pkg_resources.resource_filename("multiforks." + fork_name, "initial-config.yaml"))
+                                pkg_resources.resource_filename("multiforks.forks." + fork_name, "initial-config.yaml"))
     print("seeder_config", "multiforks." + fork_name)
     # Patch in the values with anchors, since pyyaml tends to change
     # the anchors to things like id001, etc
@@ -58,7 +58,7 @@ def initial_config_file(filename: Union[str, Path]) -> str:
     if fork_name is None:
         fork_name = 'chia-mainnet'
 
-    return pkg_resources.resource_string("multiforks." + fork_name, f"initial-{filename}").decode()
+    return pkg_resources.resource_string("multiforks.forks." + fork_name, f"initial-{filename}").decode()
 
 
 def get_chia_ca_crt_key() -> Tuple[Any, Any]:
@@ -66,8 +66,8 @@ def get_chia_ca_crt_key() -> Tuple[Any, Any]:
     if fork_name is None:
         fork_name = 'chia-mainnet'
 
-    crt = pkg_resources.resource_string("multiforks." + fork_name + ".ssl", "chia_ca.crt")
-    key = pkg_resources.resource_string("multiforks." + fork_name + ".ssl", "chia_ca.key")
+    crt = pkg_resources.resource_string("multiforks.forks." + fork_name + ".ssl", "chia_ca.crt")
+    key = pkg_resources.resource_string("multiforks.forks." + fork_name + ".ssl", "chia_ca.key")
     return crt, key
 
 

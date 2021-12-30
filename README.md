@@ -19,10 +19,10 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 ## cli commands
-python -m multiforks.xxxxcli equal to 'chia command'
+python -m multiforks.cmds.XXXcli equal to 'chia command'
 
 ```bash
-python -m multiforks.ext9cli
+python -m multiforks.cmds.ext9cli
 
 Usage: chia show [OPTIONS]
 
@@ -53,14 +53,23 @@ Options:
 
 1. n-chain ext9 
 ```bash
-python -m multiforks.ext9cli init
-python -m multiforks.ext9cli start node 
+python -m multiforks.cmds.ext9cli init
+python -m multiforks.cmds.ext9cli start node 
+
+or
+
+python -m multiforks.launchers.forkcli ext9 start node
+
 ```
 
 2. flax 
 ```bash
 python -m multiforks.flaxcli init
 python -m multiforks.flaxcli start node 
+
+or 
+
+python -m multiforks.launchers.forkcli flax-mainnet start node
 ```
 
 3. chia mainnet

@@ -1,15 +1,15 @@
-from multiforks import loader
+
 from os import environ
 import sys
 import inquirer
 
 
-from multiforks import forks 
-from pkgutil import iter_modules
 
 
 
-fork_list = list(map(lambda x:x.name, iter_modules(forks.__path__)))
+from multiforks.utils import fork_list
+from multiforks import loader
+
 def get_fork_name():
     fork_name = environ.get("CHIA_FORK")
     

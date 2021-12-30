@@ -1,0 +1,79 @@
+import asyncio
+from typing import final
+from chia.rpc.full_node_rpc_client import FullNodeRpcClient
+from chia.rpc.rpc_client import RpcClient
+
+from chia.util.ws_message import create_payload_dict
+from multiforks.utils import fork_list, get_fork_default_root,  get_fork_rpc_client_full_node
+
+
+from rich.console import Console
+from rich.table import Column, Table
+import os
+import psutil
+
+
+import humanize
+
+
+def get_fork_pid_service(forkname, service_name):
+    full_name = "chia_"+service_name+".pid"
+    try:
+        with open(os.path.join(get_fork_default_root(forkname), "run", full_name)) as f:
+            return "running" if psutil.pid_exists(int(f.read())) else "stopped"
+    except FileNotFoundError:
+        return "stopped"
+
+
+async def show_status():
+    console = Console()
+    table = Table(show_header=True, header_style="magenta")
+    table_columns = ["fork", "full_node",
+                     "wallet", "farmer", "harvester", "height","weight","conn","diff","space","syncd"]
+
+    for col in table_columns:
+        table.add_column(col)
+
+    for fork in fork_list:
+        height = ""
+        weight = ""
+        conn_number = ""
+        diff = ""
+        space=""
+        sync = ""
+        # print(get_fork_default_root(fork))
+        if "running" == get_fork_pid_service(fork, "full_node"):
+            ws_rpc_full_node :FullNodeRpcClient = await get_fork_rpc_client_full_node(fork)
+            try:
+                conn_number = len(  await ws_rpc_full_node.get_connections() )
+                bs = (await ws_rpc_full_node.get_blockchain_state())
+                diff = bs.get("difficulty","")                
+                if bs.get("peak",None) != None:
+                    height = str(bs.get("peak").height)
+                    weight = humanize.naturalsize(bs.get("peak").weight) 
+
+
+                space = humanize.naturalsize(bs.get("space",0),binary=True,format="%.3f") 
+                sync = bs.get("sync",{"synced":False}).get("synced")
+                ws_rpc_full_node.close()
+            except Exception as e:
+                print(e)
+                pass
+        table.add_row(fork,
+                      get_fork_pid_service(fork, "full_node"),
+                      get_fork_pid_service(fork, "wallet"),
+                      get_fork_pid_service(fork, "farmer"),
+                      get_fork_pid_service(fork, "harvester"),
+                      height,
+                      weight,
+                      str(conn_number),
+                      str(diff),
+                      space,
+                      str(sync)
+                      )
+
+    console.print(table)
+
+
+if __name__ == "__main__":
+    asyncio.run(show_status())
