@@ -1,5 +1,6 @@
 chia-blockchain==1.2.11
-inquirer==2.9.1
 tornado==6.1
 psutil=5.9.0
 humanize==3.13.1
+rich==10.16.1
+inquirer==2.9.1

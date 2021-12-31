@@ -5,20 +5,20 @@ ping_interval: 120
 self_hostname: &self_hostname "localhost"
 
 #mainnet 50401/8448/8560/8447/8559/8000/8446/8444/8555/8222/8445/8449/9257
-daemon_port: &daemon_port 15400
-def_harvester_port: &def_harvester_port 15448
-def_harvester_rpc_port: &def_harvester_rpc_port 15560
-def_farmer_port: &def_farmer_port 15447
-def_farmer_rpc_port: &def_farmer_rpc_port 15559
-def_timelord_launcher_port: &def_timelord_launcher_port 15000
-def_timelord_port: &def_timelord_port 15446
-def_full_node_port: &def_full_node_port 15444
-def_full_node_rpc_port: &def_full_node_rpc_port 15555
-def_ui_port: &def_ui_port 15222
-def_introducer_port: &def_introducer_port 15445
-def_wallet_port: &def_wallet_port 15449
-def_wallet_rpc_port: &def_wallet_rpc_port 16257
-selected_network: &selected_network "testnet7"
+daemon_port: &daemon_port 10400
+def_harvester_port: &def_harvester_port 18448
+def_harvester_rpc_port: &def_harvester_rpc_port 18560
+def_farmer_port: &def_farmer_port 18447
+def_farmer_rpc_port: &def_farmer_rpc_port 18559
+def_timelord_launcher_port: &def_timelord_launcher_port 18000
+def_timelord_port: &def_timelord_port 18446
+def_full_node_port: &def_full_node_port 18444
+def_full_node_rpc_port: &def_full_node_rpc_port 18555
+def_ui_port: &def_ui_port 18222
+def_introducer_port: &def_introducer_port 18445
+def_wallet_port: &def_wallet_port 18449
+def_wallet_rpc_port: &def_wallet_rpc_port 19257
+selected_network: &selected_network "testnet10"
 
 
 

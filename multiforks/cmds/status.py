@@ -106,11 +106,6 @@ async def generate_table() -> Table:
 
 
 async def show_status():
-    # # console = Console()
-    # with Live((await generate_table()),auto_refresh=False) as live:
-    #     while True:
-    #         time.sleep(5)
-    #         live.update(await generate_table())
     Console().print(await generate_table())
 
 

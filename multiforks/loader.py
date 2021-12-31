@@ -92,12 +92,10 @@ def launch_start_daemon(root_path: Path) -> subprocess.Popen:
     # print("chia patched", chia)
 
     if 'nt' == os.name:
-        startupinfo = subprocess.STARTUPINFO()
-        # startupinfo.dwFlags |= subprocess.DETACHED_PROCESS    
-        # startupinfo.dwFlags |= subprocess.CREATE_NEW_PROCESS_GROUP   
+        startupinfo = subprocess.STARTUPINFO()        
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW           
         startupinfo.wShowWindow = subprocess.SW_HIDE    
-        creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
+        creationflags =  subprocess.CREATE_NEW_PROCESS_GROUP
         process = subprocess.Popen(f"{chia} --wait-for-unlock".split(),encoding="utf-8", startupinfo=startupinfo,stdout=subprocess.PIPE,creationflags=creationflags)
         return process
     process = subprocess.Popen(f"{chia} --wait-for-unlock".split(),encoding="utf-8", stdout=subprocess.PIPE)
