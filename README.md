@@ -19,7 +19,14 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 ## cli commands
-python -m multiforks.cmds.XXXcli equal to 'chia command'
+python -m multiforks.cmds.forkcli FORKNAME equal to 'chia command'
+
+python -m multiforks.cmds.root FORKNAME list data file and port usage
+![image](https://user-images.githubusercontent.com/14208527/147796606-a31d6ca2-0e98-4da3-9b3d-a126185bb6c1.png)
+
+python -m multiforks.cmds.status FORKNAME list forks status
+![image](https://user-images.githubusercontent.com/14208527/147796590-b08b5b6c-3c37-4e3e-b881-d1c21846376a.png)
+
 
 ```bash
 python -m multiforks.cmds.ext9cli
